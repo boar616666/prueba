@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20 Rosas de Cumpleaños</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #f8f8f8;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        #mensaje {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em;
+            color: #FF1493;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.5s;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="roseCanvas"></canvas>
+    <div id="mensaje"></div>
+
+    <script>
+        const canvas = document.getElementById('roseCanvas');
+        const ctx = canvas.getContext('2d');
+        const mensaje = document.getElementById('mensaje');
+        
+        // Ajustar canvas al tamaño de la ventana
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Colores para las rosas
+        const colores = [
+            '#FF007F', '#FF1493', '#DB7093', 
+            '#FF69B4', '#C71585', '#FF6B9E'
+        ];
+
+        // Función para dibujar una rosa
+        function dibujarRosa(x, y, tamaño, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Pétalos
+            ctx.fillStyle = color;
+            for (let i = 0; i < 8; i++) {
+                ctx.beginPath();
+                ctx.ellipse(
+                    0, 0, 
+                    tamaño * 0.8, tamaño * 1.5, 
+                    (Math.PI / 4) * i, 
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            // Centro de la rosa
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(0, 0, tamaño * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        // Generar rosas una por una
+        let rosasGeneradas = 0;
+        const totalRosas = 20;
+        const intervalo = setInterval(() => {
+            if (rosasGeneradas >= totalRosas) {
+                clearInterval(intervalo);
+                mensaje.textContent = "¡Feliz cumpleaños! Aquí están tus 20 rosas :p";
+                mensaje.style.opacity = 1;
+                return;
+            }
+            
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const tamaño = 15 + Math.random() * 25;
+            const color = colores[Math.floor(Math.random() * colores.length)];
+            
+            dibujarRosa(x, y, tamaño, color);
+            rosasGeneradas++;
+        }, 500); // Cada 0.5 segundos genera una rosa
+    </script>
+</body>
+</html>
